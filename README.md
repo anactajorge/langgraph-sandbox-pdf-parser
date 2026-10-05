@@ -28,13 +28,15 @@ flowchart LR
 
 **In simple terms:** LangGraph generates a script for the PDF, and OrbStack runs it. The result returns to LangGraph if another run is needed; otherwise, the agent answers the user and ends.
 
-The `workspace/` folder lets the Mac host and the container access the same PDF and generated script. Keep the API key in the host's `.env`; the sandbox only needs the PDF, script, and any packages required to run the script.
+The `workspace/` folder lets the Mac host and the container access the same PDF and generated script. Keep the API key in the host's `.env`; the sandbox only needs the PDF, script via input folder, and any packages required to run the script.
 
 --
 ## Current Status
-- Created Graph and Sandbox Logic
-- TO use: input pdf to input folder 
+- Created Graph and Sandbox Logic.
+- TO use: input pdf to input folder.
+- Accurately extracts contents (You can see the live code in script.py).
 
 ## Limitations 
 - Should also create a tool for finding files and folders in the workspace folder. 
-- Current approach: static system prompts for file/folder names
+- Current approach: static system prompts for file/folder names.
+- GPT-OSS-120b is smart but is stingy in outputs.
