@@ -32,8 +32,8 @@ The `workspace/` folder lets the Mac host and the container access the same PDF 
 
 --
 ## Current Status
-- Connected local macos to docker/OrbStack
-- Researching on logic for LangGraph agent
+- Created Graph and Sandbox Logic
+- TO use: input pdf to input folder 
 
 ## Limitations 
 - Should also create a tool for finding files and folders in the workspace folder. 
