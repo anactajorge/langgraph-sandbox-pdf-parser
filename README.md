@@ -44,3 +44,9 @@ The `workspace/` folder lets the Mac host and the container access the same PDF 
 ## Lessons Learned
 - Creating a Sandbox and configuring runtimes.
 - Realization: Can easily expand since the sandbox will only be limited by the libraries, browser and limitations we set it to, in this case no network and a working WORKDIR.
+
+## Test Cases
+- To check: making it run python code unrelated to the pdf.
+- To check: making it export a csv or a md.
+- To check: testing read and write output outside WORKDIR.
+- To check: testing internet access.
