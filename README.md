@@ -40,3 +40,7 @@ The `workspace/` folder lets the Mac host and the container access the same PDF 
 - Should also create a tool for finding files and folders in the workspace folder. 
 - Current approach: static system prompts for file/folder names.
 - GPT-OSS-120b is smart but is stingy in outputs.
+
+## Lessons Learned
+- Creating a Sandbox and configuring runtimes.
+- Realization: Can easily expand since the sandbox will only be limited by the libraries, browser and limitations we set it to, in this case no network and a working WORKDIR.
