@@ -92,7 +92,7 @@ tool_node = ToolNode(tools)
 llm_with_tools = llm2.bind_tools(tools)
 
 # 3. Renamed function to avoid shadowing 'llm'
-def agent_node(State: AgentState):
+def agent_node(state: AgentState):
     system_prompt = SystemMessage(
         content="""You are an isolated PDF parser. The PDF is located at '/workspace/input/sample.pdf'. 
         Available libraries in the sandbox: pypdf, pdfplumber, pymupdf, pytesseract, PIL. 
@@ -100,7 +100,7 @@ def agent_node(State: AgentState):
         If you encounter a runtime error, inspect the traceback, fix the script, and run it again."""
     )
     
-    messages = [system_prompt] + list(State["messages"])
+    messages = [system_prompt] + list(state["messages"])
     
     response = llm_with_tools.invoke(messages)
     return {"messages": [response]}

@@ -35,6 +35,7 @@ The `workspace/` folder lets the Mac host and the container access the same PDF 
 - Created Graph and Sandbox Logic.
 - TO use: input pdf to input folder.
 - Accurately extracts contents (You can see the live code in script.py).
+- Creating a Chatbot with Summarization Sliding window
 
 ## Limitations 
 - Should also create a tool for finding files and folders in the workspace folder. 
