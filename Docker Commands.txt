@@ -1,0 +1,9 @@
+#TO: run docker and the script
+docker run --rm \
+  --network none \
+  --memory="1g" \
+  --cpus="1.0" \
+  --pids-limit 100 \
+  --cap-drop=ALL \
+  -v "$(pwd)/workspace:/workspace" \
+  pdf-sandbox python /workspace/script.py
