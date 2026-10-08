@@ -24,3 +24,5 @@ Thumbs.db
 !**/output/.gitkeep
 
 Docker Commands.txt
+
+script.py
