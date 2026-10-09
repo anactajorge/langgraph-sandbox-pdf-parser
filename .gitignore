@@ -26,3 +26,8 @@ Thumbs.db
 Docker Commands.txt
 
 script.py
+
+__pycache__/
+*.py[cod]
+*$py.class
+.cache/
