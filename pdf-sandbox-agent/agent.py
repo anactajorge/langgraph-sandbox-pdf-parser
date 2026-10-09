@@ -10,6 +10,7 @@ from langgraph.prebuilt import ToolNode, tools_condition
 import subprocess
 from langchain_core.rate_limiters import InMemoryRateLimiter
 from pathlib import Path
+import os
 
 load_dotenv()
 
@@ -37,6 +38,7 @@ llm2 = ChatGroq( # more generous for RPM but might lack logic
 
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
+    pdf_path: str # Added to track the path of the uploaded PDF file so it can handle names Dynamically
 
 @tool
 def execute_script(script: str) -> str:
@@ -93,8 +95,11 @@ llm_with_tools = llm2.bind_tools(tools)
 
 # 3. Renamed function to avoid shadowing 'llm'
 def agent_node(State: AgentState):
+    pdf_file = State.get("pdf_path", "sample.pdf")
+    filename = os.path.basename(pdf_file)
+
     system_prompt = SystemMessage(
-        content="""You are an isolated PDF parser. The PDF is located at '/workspace/input/sample.pdf'. 
+        content=f"""You are an isolated PDF parser. The PDF is located at '/workspace/input/{filename}'. 
         Available libraries in the sandbox: pypdf, pdfplumber, pymupdf, pytesseract, PIL. 
         Use the execute_script tool to inspect the document and print your findings. 
         If you encounter a runtime error, inspect the traceback, fix the script, and run it again."""
@@ -122,7 +127,8 @@ workflow.add_edge("tools", "agent")
 
 app = workflow.compile()
 
-def running_agent():
+# CLI entry point for testing the agent in a terminal environments
+"""def running_agent():
     print("\nPDF Sandbox Agent is running. Type 'exit' or 'quit' to stop.")
     
     while True:
@@ -138,4 +144,4 @@ def running_agent():
         print(result['messages'][-1].content)
 
 if __name__ == "__main__":
-    running_agent()
+    running_agent()"""
