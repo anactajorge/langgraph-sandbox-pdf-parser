@@ -11,6 +11,7 @@ import subprocess
 from langchain_core.rate_limiters import InMemoryRateLimiter
 from pathlib import Path
 import os
+from langgraph.checkpoint.memory import MemorySaver
 
 load_dotenv()
 
@@ -125,7 +126,8 @@ workflow.add_conditional_edges(
 
 workflow.add_edge("tools", "agent")
 
-app = workflow.compile()
+memory = MemorySaver()
+app = workflow.compile(checkpointer=memory)
 
 # CLI entry point for testing the agent in a terminal environments
 """def running_agent():

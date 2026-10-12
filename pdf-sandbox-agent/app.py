@@ -2,6 +2,7 @@ import os
 import shutil
 import gradio as gr
 from agent import app
+from langgraph.errors import GraphRecursionError
 
 WORKSPACE_INPUT = os.path.join(os.path.dirname(__file__), "workspace", "input")
 os.makedirs(WORKSPACE_INPUT, exist_ok=True)
@@ -26,15 +27,30 @@ def chat_with_agent(user_message, chat_history, active_pdf_path):
     if not active_pdf_path:
         bot_response = "Please upload a PDF on the left panel first."
     else:
+        config = {
+            "recursion_limit": 20, 
+            "configurable": {"thread_id": "thread_123"}
+            }
+        
         initial_state = {
             "messages": [("user", user_message)],
             "pdf_path": active_pdf_path,
         }
-        result = app.invoke(initial_state)
-        bot_response = result["messages"][-1].content
+        try:
+            result = app.invoke(initial_state, config=config)
+            last_message = result["messages"][-1].content
 
+            bot_response = last_message
+
+        except GraphRecursionError:
+            bot_response = "Error: Recursion limit exceeded."
+        except Exception as e: 
+            bot_response = f"An unexpected error occurred: {str(e)}"
+
+    # newer version of gradio uses a list of tuples for chat history instead of a list of dicts
     chat_history.append({"role": "user", "content": user_message})
     chat_history.append({"role": "assistant", "content": bot_response})
+
     return "", chat_history
 
 
