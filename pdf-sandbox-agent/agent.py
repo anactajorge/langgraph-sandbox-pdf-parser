@@ -1,4 +1,4 @@
-from typing import Annotated, Sequence, TypedDict
+from typing import Annotated, Sequence, TypedDict, NotRequired, Optional
 from dotenv import load_dotenv  
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -39,7 +39,7 @@ llm2 = ChatGroq( # more generous for RPM but might lack logic
 
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
-    pdf_path: str # Added to track the path of the uploaded PDF file so it can handle names Dynamically
+    pdf_path: NotRequired[Optional[str]] # Added to track the path of the uploaded PDF file so it can handle names Dynamically
 
 @tool
 def execute_script(script: str) -> str:
@@ -96,7 +96,7 @@ llm_with_tools = llm2.bind_tools(tools)
 
 # 3. Renamed function to avoid shadowing 'llm'
 def agent_node(State: AgentState):
-    pdf_file = State.get("pdf_path", "sample.pdf")
+    pdf_file = State.get("pdf_path") or "sample.pdf"
     filename = os.path.basename(pdf_file)
 
     system_prompt = SystemMessage(
