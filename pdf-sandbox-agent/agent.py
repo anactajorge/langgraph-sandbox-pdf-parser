@@ -44,8 +44,10 @@ class AgentState(TypedDict):
 @tool
 def execute_script(script: str) -> str:
     """
-    Writes a Python script to workspace/script.py, executes it inside 
-    the isolated Docker container, and returns the terminal output.
+    Executes a Python script inside an isolated Docker sandbox to inspect or process a PDF.
+
+    DO NOT call this tool for simple conversation, general knowledge, or questions that don't require running code.
+    ONLY call this tool when Python code execution is strictly necessary to inspect, parse, or manipulate the PDF file.
     """
     WORKSPACE_PATH.mkdir(parents=True, exist_ok=True)
 
@@ -100,10 +102,14 @@ def agent_node(State: AgentState):
     filename = os.path.basename(pdf_file)
 
     system_prompt = SystemMessage(
-        content=f"""You are an isolated PDF parser. The PDF is located at '/workspace/input/{filename}'. 
+        content=f"""
+        You are an isolated PDF parser assistant. The target PDF is located at '/workspace/input/{filename}'. 
         Available libraries in the sandbox: pypdf, pdfplumber, pymupdf, pytesseract, PIL. 
-        Use the execute_script tool to inspect the document and print your findings. 
-        If you encounter a runtime error, inspect the traceback, fix the script, and run it again."""
+
+        RULES FOR TOOL USAGE:
+        1. ONLY invoke `execute_script` when you need to execute Python code to inspect, parse, or process the PDF file.
+        2. For greetings, general explanations, or questions that do not require running code, respond directly using plain text WITHOUT calling tools.
+        3. If an execution error occurs, analyze the traceback, modify the script, and re-run it."""
     )
     
     messages = [system_prompt] + list(State["messages"])
